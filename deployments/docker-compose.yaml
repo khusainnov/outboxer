@@ -1,0 +1,38 @@
+version: "3.9"
+
+services:
+  outboxer-app:
+    container_name: outboxer-app
+    hostname: outboxer-app
+    build:
+      context: ../
+      target: build
+    ports:
+      - "53000:53000"
+    env_file:
+      - local.env
+    depends_on:
+      - TODO
+    volumes:
+      - "..:/app"
+    command: "go run main.go app"
+    networks:
+      - outboxer-net
+
+  outboxer-ci-lint:
+    container_name: outboxer-ci-lint
+    hostname: outboxer-ci-lint
+    build:
+      context: ../
+      target: build
+    env_file:
+      - local.env
+    volumes:
+      - "..:/app"
+    command: "make ci-lint"
+    networks:
+      - outboxer-net
+
+networks:
+  outboxer-net:
+
